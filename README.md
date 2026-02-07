@@ -29,13 +29,14 @@ open templates/interactive.html
 | `→` or `Space` | Next slide |
 | `←` | Previous slide |
 | `T` | Open timer configuration |
-| `S` | Start/stop timer |
+| `S` / `P` | Pause/resume timer |
 | `N` | Toggle speaker notes |
 | `Escape` | Close modals |
 
 **Timer Features:**
 - Presets: 3, 5, 7 minutes (click to select)
 - Custom: Enter any duration 1-30 minutes
+- Pause/resume: Press `S` or `P` to toggle (pulsing indicator when paused)
 - Visual alerts: Amber at 2 min remaining, Red at 1 min
 - Auto-start: Timer begins when you leave slide 1
 

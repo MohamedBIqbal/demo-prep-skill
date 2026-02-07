@@ -636,6 +636,14 @@
 
         .timer.warning { color: var(--warning); background: #fff3e6; }
         .timer.danger { color: var(--danger); background: #ffe6e6; }
+        .timer.paused {
+            opacity: 0.6;
+            animation: pulse-pause 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse-pause {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
 
         /* Timer config */
         .timer-config {
@@ -800,7 +808,7 @@
             <button onclick="setTimer(parseInt(document.getElementById('customMinutes').value))" class="timer-set-btn">Set</button>
         </div>
         <div style="margin-top:12px;font-size:11px;color:#94a3b8;">
-            <kbd>T</kbd> timer &nbsp; <kbd>S</kbd> start/stop &nbsp; <kbd>N</kbd> notes
+            <kbd>T</kbd> timer &nbsp; <kbd>S</kbd> or <kbd>P</kbd> pause/resume &nbsp; <kbd>N</kbd> notes
         </div>
     </div>
 
@@ -1144,7 +1152,7 @@
         <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;
         <kbd>N</kbd> notes &nbsp;
         <kbd>T</kbd> timer &nbsp;
-        <kbd>S</kbd> start/stop
+        <kbd>S</kbd> <kbd>P</kbd> pause/resume
     </div>
 
     <!-- ==================== SCRIPTS ==================== -->
@@ -1157,6 +1165,7 @@
         const totalSlides = 8;
         let timerInterval = null;
         let timeRemaining = 300;
+        let timerPaused = false;
 
         // Speaker notes
         const speakerNotes = {
@@ -1192,6 +1201,8 @@
         function startTimer() {
             const timer = document.getElementById('timer');
             timer.style.display = 'block';
+            timer.classList.remove('paused');
+            timerPaused = false;
             closeTimerConfig();
 
             timerInterval = setInterval(() => {
@@ -1208,17 +1219,49 @@
             }, 1000);
         }
 
+        function pauseTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                timerPaused = true;
+                const timer = document.getElementById('timer');
+                timer.classList.add('paused');
+            }
+        }
+
+        function resumeTimer() {
+            if (timerPaused && timeRemaining > 0) {
+                timerPaused = false;
+                startTimer();
+            }
+        }
+
+        function toggleTimer() {
+            const timer = document.getElementById('timer');
+            if (timerInterval) {
+                // Currently running - pause it
+                pauseTimer();
+            } else if (timerPaused) {
+                // Currently paused - resume it
+                resumeTimer();
+            } else {
+                // Not started - start it
+                startTimer();
+            }
+        }
+
         function setTimer(minutes) {
             if (timerInterval) {
                 clearInterval(timerInterval);
                 timerInterval = null;
             }
+            timerPaused = false;
 
             timeRemaining = minutes * 60;
             const timer = document.getElementById('timer');
             timer.textContent = `${minutes}:00`;
             timer.style.display = 'block';
-            timer.classList.remove('warning', 'danger');
+            timer.classList.remove('warning', 'danger', 'paused');
 
             document.querySelectorAll('.timer-preset').forEach(btn => {
                 btn.classList.remove('active');
@@ -1246,12 +1289,10 @@
             }
             if (e.key === 't' || e.key === 'T') toggleTimerConfig();
             if (e.key === 's' || e.key === 'S') {
-                if (timerInterval) {
-                    clearInterval(timerInterval);
-                    timerInterval = null;
-                } else {
-                    startTimer();
-                }
+                toggleTimer();
+            }
+            if (e.key === 'p' || e.key === 'P') {
+                toggleTimer();
             }
             if (e.key === 'Escape') closeTimerConfig();
         });
