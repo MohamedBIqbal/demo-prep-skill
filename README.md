@@ -4,11 +4,12 @@ A Claude Code skill for preparing product demos — from technical walkthroughs 
 
 ## Features
 
-- **Interactive HTML Presentation** — McKinsey-style slides with built-in timer
-- **PowerPoint Generator** — Create shareable PPTX from your content
-- **Presenter Script Template** — Timing markers and speaker notes
-- **Live API Support** — Execute real-time API calls during demos
+- **Interactive HTML Presentation** — McKinsey-style slides with architecture pipelines, iceberg visualizations, and score factor panels
+- **Terminal Demo Script** — Modular bash script for terminal-based demos with live API calls
+- **PowerPoint Generator** — 10-slide presentations with color palettes and screenshot integration
+- **Dual Script Templates** — Technical and C-Suite focused presenter scripts
 - **Timer Presets** — 3, 5, 7 minute presets + custom duration
+- **Live API Support** — Execute real-time API calls during demos
 
 ## What's Included
 
@@ -16,8 +17,10 @@ A Claude Code skill for preparing product demos — from technical walkthroughs 
 |------|---------|
 | `SKILL.md` | Skill definition with demo frameworks and best practices |
 | `templates/interactive.html` | McKinsey-style HTML presentation with timer |
-| `templates/script.md` | Presenter script template with timing markers |
-| `scripts/generate_pptx.py` | Python script to generate PowerPoint from your content |
+| `templates/script.md` | Technical presenter script with timing markers |
+| `templates/script-csuite.md` | Executive-focused script with objection handling |
+| `templates/demo.sh` | Terminal demo script (modular, color-coded) |
+| `scripts/generate_pptx.py` | PowerPoint generator (10 slides, palettes, screenshots) |
 
 ## Installation
 
@@ -143,9 +146,49 @@ This allows you to:
 # Install dependencies
 pip install python-pptx Pillow
 
-# Generate PPTX (customize the script for your content)
+# Generate PPTX (basic)
 python scripts/generate_pptx.py --output my_demo.pptx
+
+# Generate with screenshots (auto-detected from folder)
+python scripts/generate_pptx.py --output my_demo.pptx --screenshots ./screenshots
+
+# Generate with iceberg color palette
+python scripts/generate_pptx.py --output my_demo.pptx --palette iceberg
 ```
+
+### PPTX Features
+
+- **10-slide structure** with iceberg visualization for problem slides
+- **Story-based color palettes:**
+  - `default` — Corporate professional (blue/gray)
+  - `iceberg` — Hidden costs narrative (sky above, ocean below)
+- **Screenshot integration:** Auto-detects images in screenshots folder (4.png, 5.png, etc.)
+- **Speaker notes:** Timing and talking points for each slide
+
+### Iceberg Storytelling Theme
+
+Use `--palette iceberg` when your demo reveals hidden costs or "tip of the iceberg" problems:
+
+```bash
+python scripts/generate_pptx.py --output demo.pptx --palette iceberg
+```
+
+The iceberg visualization shows visible costs above the waterline and hidden damage below — a powerful metaphor for compliance, security, or cost-focused demos.
+
+## Terminal Demo
+
+Run demos directly in the terminal:
+
+```bash
+# Full demo
+./templates/demo.sh
+
+# Specific sections only
+./templates/demo.sh 1 2 3    # Sections 1, 2, 3
+./templates/demo.sh 3        # Just the live demo
+```
+
+Sections: 0=title, 1=hook, 2=solution, 3=demo, 4=results, 5=next, 6=ask
 
 ## Requirements
 

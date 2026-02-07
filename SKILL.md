@@ -39,7 +39,9 @@ Use this skill when you need to:
 
 1. **Interactive HTML** (`templates/interactive.html`) — Live presentation with timer and optional API calls
 2. **Presenter Script** (`templates/script.md`) — What to say, timing markers
-3. **PowerPoint** (`demo.pptx`) — Generated from `scripts/generate_pptx.py`
+3. **C-Suite Script** (`templates/script-csuite.md`) — Executive-focused script with objection prep
+4. **Terminal Demo** (`templates/demo.sh`) — Bash script for terminal-based demos with modular sections
+5. **PowerPoint** (`demo.pptx`) — Generated from `scripts/generate_pptx.py` (10 slides, multiple palettes)
 
 ## Tips for Technical Demos
 
@@ -272,7 +274,11 @@ Each slide should follow:
 - **Max 6 words per bullet**
 - **Max 6 bullets per slide**
 
-## Color Palette (Corporate-Safe)
+## Color Palettes (Story-Based Themes)
+
+Choose a palette based on your storytelling approach:
+
+### Default Palette — Corporate Professional
 
 | Color | Hex | Use |
 |-------|-----|-----|
@@ -282,6 +288,36 @@ Each slide should follow:
 | Warning Amber | #D97706 | Caution, attention |
 | Danger Red | #DC2626 | Risks, problems |
 | Light Gray | #F8FAFC | Backgrounds |
+
+**When to use:** Standard demos, technical audiences, corporate presentations.
+
+### Iceberg Palette — Hidden Costs Storytelling
+
+| Color | Hex | Use |
+|-------|-----|-----|
+| Sky | #E0F2FE | Above water (visible) |
+| Sky Mid | #BAE6FD | Labels in sky zone |
+| Ocean | #0284C7 | Water line transition |
+| Ocean Deep | #0C4A6E | Below water (hidden) |
+| Accent Orange | #F97316 | The visible cost number |
+| Text Light | #FFFFFF | Text on dark ocean |
+
+**When to use:** Demos that reveal hidden costs, compliance risks, or "tip of the iceberg" problems. The visual metaphor shows the audience what they see vs. what's lurking beneath.
+
+**Example narrative:**
+> "That $2.3M fine? That's just what you can see above the waterline. Below the surface: months of remediation, lost customer trust, and regulatory scrutiny."
+
+### Using Palettes in PPTX
+
+```bash
+# Default corporate theme
+python scripts/generate_pptx.py --output demo.pptx
+
+# Iceberg storytelling theme (for hidden costs narrative)
+python scripts/generate_pptx.py --output demo.pptx --palette iceberg
+```
+
+The iceberg palette automatically applies to slide 2 (The Problem) with sky/ocean visualization.
 
 ## Slide Templates
 
@@ -301,11 +337,57 @@ Each slide should follow:
 # Install dependencies
 pip install python-pptx Pillow
 
-# Generate PPTX
+# Generate PPTX (basic)
 python scripts/generate_pptx.py --output demo.pptx
+
+# Generate with screenshots
+python scripts/generate_pptx.py --output demo.pptx --screenshots ./screenshots
+
+# Generate with iceberg palette
+python scripts/generate_pptx.py --output demo.pptx --palette iceberg
 ```
 
+### PPTX Features
+
+- **10-slide structure** with iceberg visualization for problem slides
+- **Color palettes:** `default` (blue/gray) or `iceberg` (sky/ocean)
+- **Screenshot integration:** Auto-detects images in screenshots folder
+- **Speaker notes:** Timing and talking points for each slide
+
 See `scripts/generate_pptx.py` for customization options.
+
+---
+
+## Terminal Demo Script
+
+The `templates/demo.sh` script provides a modular terminal-based demo:
+
+```bash
+# Run full demo
+./templates/demo.sh
+
+# Run specific sections
+./templates/demo.sh 1 2 3      # Sections 1, 2, 3 only
+./templates/demo.sh 3          # Just the live demo section
+```
+
+### Sections
+
+| Section | Name | Content |
+|---------|------|---------|
+| 0 | Title | ASCII art title card |
+| 1 | Hook | Problem statement |
+| 2 | Solution | Architecture overview |
+| 3 | Demo | Live demo (API calls, interactive) |
+| 4 | Results | Metrics and validation |
+| 5 | Next | Challenges and roadmap |
+| 6 | Ask | Clear ask and closing |
+
+Features:
+- Color-coded output
+- Pause between sections for presenter control
+- Optional live API calls
+- Server health checks
 
 ---
 
@@ -313,12 +395,17 @@ See `scripts/generate_pptx.py` for customization options.
 
 ```
 demo-prep-skill/
-├── SKILL.md                 # This file
+├── SKILL.md                   # This file
+├── README.md                  # Quick start guide
 ├── templates/
-│   ├── interactive.html     # HTML presentation with timer
-│   └── script.md            # Presenter script template
+│   ├── interactive.html       # HTML presentation with timer
+│   ├── script.md              # Technical demo script
+│   ├── script-csuite.md       # C-Suite focused script
+│   └── demo.sh                # Terminal demo (bash)
 ├── scripts/
-│   └── generate_pptx.py     # PowerPoint generator
+│   └── generate_pptx.py       # PowerPoint generator (10 slides)
+├── screenshots/               # Add your screenshots here
+│   └── .gitkeep
 └── examples/
-    └── your-demo/           # Your customized demo
+    └── .gitkeep               # Your customized demos
 ```

@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demo Presentation</title>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --blue-dark: #003366;
             --blue-mid: #0066cc;
             --blue-light: #e6f0fa;
             --accent: #00a3a3;
+            --accent-light: #e6f7f7;
             --warning: #cc6600;
             --danger: #cc0000;
             --success: #008844;
+            --purple: #8b5cf6;
             --text-primary: #1a1a1a;
             --text-secondary: #4d4d4d;
             --text-muted: #808080;
@@ -31,6 +33,7 @@
             overflow: hidden;
         }
 
+        /* McKinsey-style slides */
         .slide {
             display: none;
             width: 100vw;
@@ -38,6 +41,7 @@
             padding: 60px 80px 100px 80px;
             flex-direction: column;
             background: var(--bg-white);
+            overflow-y: auto;
         }
 
         .slide.active {
@@ -45,6 +49,7 @@
             flex-direction: column;
         }
 
+        /* Context label */
         .context {
             font-size: 14px;
             color: var(--text-muted);
@@ -53,6 +58,7 @@
             letter-spacing: 0.1em;
         }
 
+        /* Action Title - The Takeaway */
         .action-title {
             font-size: 32px;
             font-weight: 600;
@@ -62,10 +68,11 @@
             max-width: 80%;
         }
 
+        /* Hero Stat */
         .hero-stat {
-            font-size: 100px;
+            font-size: 120px;
             font-weight: 700;
-            color: var(--blue-mid);
+            color: var(--blue-dark);
             line-height: 1;
         }
 
@@ -75,6 +82,7 @@
             margin-top: 10px;
         }
 
+        /* Card Grid */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -101,6 +109,504 @@
             color: var(--text-secondary);
             line-height: 1.5;
         }
+
+        /* Point Cards (supporting points) */
+        .supporting-points {
+            display: flex;
+            gap: 40px;
+            margin-top: auto;
+        }
+
+        .point-card {
+            flex: 1;
+            padding: 24px;
+            background: var(--bg-light);
+            border-left: 4px solid var(--blue-mid);
+        }
+
+        .point-card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--blue-mid);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .point-card p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Flow Diagram */
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px 0;
+        }
+
+        .flow-step {
+            padding: 20px 32px;
+            background: var(--bg-light);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .flow-step.highlight {
+            background: linear-gradient(135deg, #0066cc, #0088ff);
+            border-color: #0088ff;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.4);
+        }
+
+        .flow-arrow {
+            font-size: 24px;
+            color: var(--text-muted);
+        }
+
+        /* Layer Stack (for multi-phase processes) */
+        .layer-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 700px;
+        }
+
+        .layer {
+            padding: 24px 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .layer-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .layer-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .layer-content p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .layer.pre-phase {
+            background: #fff3e6;
+            border-left: 4px solid var(--warning);
+        }
+        .layer.pre-phase .layer-number {
+            background: var(--warning);
+            color: white;
+        }
+        .layer.pre-phase h4 { color: var(--warning); }
+
+        .layer.main-phase {
+            background: var(--accent-light);
+            border-left: 4px solid var(--accent);
+        }
+        .layer.main-phase .layer-number {
+            background: var(--accent);
+            color: white;
+        }
+        .layer.main-phase h4 { color: var(--accent); }
+
+        .layer.post-phase {
+            background: #ffe6e6;
+            border-left: 4px solid var(--danger);
+        }
+        .layer.post-phase .layer-number {
+            background: var(--danger);
+            color: white;
+        }
+        .layer.post-phase h4 { color: var(--danger); }
+
+        /* Architecture Pipeline */
+        .arch-pipeline {
+            position: relative;
+            margin: 30px 0 40px;
+            padding: 20px 0;
+        }
+
+        .arch-stages {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .arch-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .arch-stage:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .stage-icon-wrap {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 24px;
+        }
+
+        .stage-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .stage-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .stage-detail {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .arch-connector {
+            font-size: 18px;
+            color: #94a3b8;
+            font-weight: 300;
+        }
+
+        .stage-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            z-index: 100;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .stage-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1e293b;
+        }
+
+        .arch-stage:hover .stage-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Score Factors Panel */
+        .score-factors-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 24px 32px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .score-factors-panel h4 {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .factor-grid {
+            flex: 1;
+            display: flex;
+            gap: 16px;
+        }
+
+        .factor-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 12px 16px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .factor-card:hover {
+            background: #e8f4fd;
+            transform: translateY(-2px);
+        }
+
+        .factor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .factor-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .factor-pct {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--blue-dark);
+        }
+
+        .factor-bar {
+            height: 6px;
+            background: #d9e2ec;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .factor-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue-mid), var(--accent));
+            border-radius: 3px;
+        }
+
+        .factor-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        /* Problem Comparison */
+        .problem-comparison {
+            display: flex;
+            align-items: stretch;
+            gap: 20px;
+            margin: 30px 0 24px;
+        }
+
+        .problem-card {
+            flex: 1;
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .problem-need {
+            background: linear-gradient(145deg, #f0fdf4, #dcfce7);
+            border: 1px solid #86efac;
+        }
+
+        .problem-lack {
+            background: linear-gradient(145deg, #fef2f2, #fee2e2);
+            border: 1px solid #fca5a5;
+        }
+
+        .problem-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .problem-icon { font-size: 28px; }
+
+        .problem-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .problem-need .problem-label { color: #166534; }
+        .problem-lack .problem-label { color: #991b1b; }
+
+        .problem-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .problem-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+
+        .problem-item .item-icon {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Iceberg Visualization */
+        .iceberg-container {
+            display: flex;
+            flex-direction: column;
+            border-radius: 16px;
+            overflow: hidden;
+            max-width: 400px;
+        }
+
+        .iceberg-above {
+            background: linear-gradient(145deg, #e0f2fe, #bae6fd);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .iceberg-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #0369a1;
+            margin-bottom: 8px;
+        }
+
+        .iceberg-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ea580c;
+        }
+
+        .iceberg-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .iceberg-below {
+            background: linear-gradient(145deg, #0284c7, #0c4a6e);
+            padding: 24px;
+        }
+
+        .iceberg-below .iceberg-label {
+            color: #bae6fd;
+        }
+
+        .iceberg-item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .iceberg-item:last-child {
+            border-bottom: none;
+        }
+
+        .iceberg-item-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .iceberg-item-desc {
+            font-size: 11px;
+            color: #bae6fd;
+        }
+
+        /* Callout items */
+        .arch-callouts {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .callout-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            max-width: 220px;
+        }
+
+        .callout-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .callout-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .callout-content strong {
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .callout-content span {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Risk Banner */
+        .risk-banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(90deg, #fef3c7, #fde68a);
+            border: 1px solid #f59e0b;
+            border-radius: 12px;
+            padding: 16px 24px;
+        }
+
+        .risk-icon { font-size: 24px; }
+
+        .risk-text {
+            font-size: 16px;
+            color: #92400e;
+        }
+
+        .risk-text strong { color: #dc2626; }
 
         /* Progress bar */
         .progress-bar {
@@ -329,20 +835,56 @@
         <p class="context" style="color: var(--danger);">THE PROBLEM</p>
         <h2 class="action-title">State the problem as an action title — what's broken?</h2>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px;">
-            <div>
-                <h3 style="color: var(--text-secondary); margin-bottom: 20px;">Current State</h3>
-                <ul style="list-style: none; font-size: 18px; line-height: 2;">
-                    <li>❌ Pain point 1</li>
-                    <li>❌ Pain point 2</li>
-                    <li>❌ Pain point 3</li>
-                </ul>
+        <div style="display: flex; gap: 40px; margin-top: 20px;">
+            <!-- Left: Problem comparison -->
+            <div style="flex: 1;">
+                <div class="problem-comparison" style="flex-direction: column; gap: 16px;">
+                    <div class="problem-card problem-need">
+                        <div class="problem-header">
+                            <span class="problem-icon">✅</span>
+                            <span class="problem-label">What's needed</span>
+                        </div>
+                        <div class="problem-items">
+                            <div class="problem-item"><span class="item-icon">📄</span> Requirement 1</div>
+                            <div class="problem-item"><span class="item-icon">📊</span> Requirement 2</div>
+                            <div class="problem-item"><span class="item-icon">🎯</span> Requirement 3</div>
+                        </div>
+                    </div>
+                    <div class="problem-card problem-lack">
+                        <div class="problem-header">
+                            <span class="problem-icon">❌</span>
+                            <span class="problem-label">What's missing</span>
+                        </div>
+                        <div class="problem-items">
+                            <div class="problem-item"><span class="item-icon">⚠️</span> Gap 1</div>
+                            <div class="problem-item"><span class="item-icon">⚠️</span> Gap 2</div>
+                            <div class="problem-item"><span class="item-icon">⚠️</span> Gap 3</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div style="background: #fee2e2; padding: 32px; border-radius: 12px; border-left: 4px solid var(--danger);">
-                <h3 style="color: var(--danger); margin-bottom: 16px;">⚠️ The Risk</h3>
-                <p style="font-size: 18px; color: var(--text-secondary);">
-                    What happens if this problem isn't solved? Make it concrete.
-                </p>
+            <!-- Right: Iceberg visualization (optional) -->
+            <div class="iceberg-container">
+                <div class="iceberg-above">
+                    <div class="iceberg-label">The visible cost</div>
+                    <div class="iceberg-value">$X.XM</div>
+                    <div class="iceberg-subtitle">...but that's just the start</div>
+                </div>
+                <div class="iceberg-below">
+                    <div class="iceberg-label">The hidden damage</div>
+                    <div class="iceberg-item">
+                        <div class="iceberg-item-title">"Why did this happen?"</div>
+                        <div class="iceberg-item-desc">No audit trail = no answer</div>
+                    </div>
+                    <div class="iceberg-item">
+                        <div class="iceberg-item-title">X in Y warnings</div>
+                        <div class="iceberg-item-desc">Triggered by missing records</div>
+                    </div>
+                    <div class="iceberg-item">
+                        <div class="iceberg-item-title">Your team acts on bad data</div>
+                        <div class="iceberg-item-desc">Wrong answer → wrong decision</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -362,9 +904,14 @@
                 <div style="font-size: 16px; color: var(--text-muted);">metric label</div>
             </div>
             <div style="background: white; border: 2px solid var(--border); border-radius: 16px; padding: 40px; text-align: center;">
-                <div style="font-size: 64px; font-weight: 700; color: var(--accent);">99%</div>
+                <div style="font-size: 64px; font-weight: 700; color: var(--purple);">99%</div>
                 <div style="font-size: 16px; color: var(--text-muted);">metric label</div>
             </div>
+        </div>
+
+        <div class="risk-banner" style="margin-top: 40px;">
+            <span class="risk-icon">📄</span>
+            <span class="risk-text">Example: A single document can be <strong>1,000+ pages</strong> — that's what needs to be searched</span>
         </div>
     </div>
 
@@ -373,17 +920,94 @@
         <p class="context">THE SOLUTION</p>
         <h2 class="action-title">How your product solves the problem — architecture overview</h2>
 
-        <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin: 40px 0;">
-            <div style="padding: 20px 32px; background: var(--bg-light); border-radius: 8px; font-weight: 600;">Input</div>
-            <span style="font-size: 24px; color: var(--text-muted);">→</span>
-            <div style="padding: 20px 32px; background: var(--blue-mid); color: white; border-radius: 8px; font-weight: 600;">Your Product</div>
-            <span style="font-size: 24px; color: var(--text-muted);">→</span>
-            <div style="padding: 20px 32px; background: var(--success); color: white; border-radius: 8px; font-weight: 600;">Output</div>
+        <!-- Architecture Pipeline -->
+        <div class="arch-pipeline">
+            <div class="arch-stages">
+                <div class="arch-stage" style="position: relative;">
+                    <div class="stage-icon-wrap" style="background: #e6f0fa;">📥</div>
+                    <div class="stage-info">
+                        <span class="stage-name">Input</span>
+                        <span class="stage-detail">User query</span>
+                    </div>
+                    <div class="stage-tooltip">
+                        <div class="tooltip-row"><strong>Action:</strong> Receive input</div>
+                        <div class="tooltip-row"><strong>Output:</strong> Validated query</div>
+                    </div>
+                </div>
+                <span class="arch-connector">→</span>
+                <div class="arch-stage" style="position: relative;">
+                    <div class="stage-icon-wrap" style="background: #fff3e6;">🔍</div>
+                    <div class="stage-info">
+                        <span class="stage-name">Process 1</span>
+                        <span class="stage-detail">Pre-processing</span>
+                    </div>
+                    <div class="stage-tooltip">
+                        <div class="tooltip-row"><strong>Action:</strong> Pre-process</div>
+                        <div class="tooltip-row"><strong>Output:</strong> Prepared data</div>
+                    </div>
+                </div>
+                <span class="arch-connector">→</span>
+                <div class="arch-stage" style="position: relative; border-color: var(--blue-mid); border-width: 2px;">
+                    <div class="stage-icon-wrap" style="background: var(--blue-mid); color: white;">⚡</div>
+                    <div class="stage-info">
+                        <span class="stage-name" style="color: var(--blue-mid);">Core Process</span>
+                        <span class="stage-detail">Main transformation</span>
+                    </div>
+                    <div class="stage-tooltip">
+                        <div class="tooltip-row"><strong>Action:</strong> Core logic</div>
+                        <div class="tooltip-row"><strong>Output:</strong> Result</div>
+                    </div>
+                </div>
+                <span class="arch-connector">→</span>
+                <div class="arch-stage" style="position: relative;">
+                    <div class="stage-icon-wrap" style="background: #e6ffe6;">✓</div>
+                    <div class="stage-info">
+                        <span class="stage-name">Verify</span>
+                        <span class="stage-detail">Validation</span>
+                    </div>
+                    <div class="stage-tooltip">
+                        <div class="tooltip-row"><strong>Action:</strong> Validate output</div>
+                        <div class="tooltip-row"><strong>Output:</strong> Verified result</div>
+                    </div>
+                </div>
+                <span class="arch-connector">→</span>
+                <div class="arch-stage" style="position: relative;">
+                    <div class="stage-icon-wrap" style="background: #f0fdf4; color: var(--success);">📤</div>
+                    <div class="stage-info">
+                        <span class="stage-name">Output</span>
+                        <span class="stage-detail">Final result</span>
+                    </div>
+                    <div class="stage-tooltip">
+                        <div class="tooltip-row"><strong>Action:</strong> Deliver</div>
+                        <div class="tooltip-row"><strong>Output:</strong> Verified answer</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <p style="text-align: center; color: var(--text-muted); font-size: 16px;">
-            Replace with your actual architecture diagram or flow
-        </p>
+        <div class="arch-callouts">
+            <div class="callout-item">
+                <span class="callout-icon">🔐</span>
+                <div class="callout-content">
+                    <strong>Security</strong>
+                    <span>Access control at every step</span>
+                </div>
+            </div>
+            <div class="callout-item">
+                <span class="callout-icon">📋</span>
+                <div class="callout-content">
+                    <strong>Audit</strong>
+                    <span>Full traceability</span>
+                </div>
+            </div>
+            <div class="callout-item">
+                <span class="callout-icon">⚡</span>
+                <div class="callout-content">
+                    <strong>Speed</strong>
+                    <span>Sub-second response</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- SLIDE 5: Live Demo -->
@@ -397,7 +1021,6 @@
                 <em>API calls, interactive elements, or embedded iframe</em>
             </p>
 
-            <!-- Example: API integration point -->
             <button onclick="runDemo()" style="margin-top: 24px; padding: 16px 32px; background: var(--blue-mid); color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer;">
                 Run Demo →
             </button>
@@ -425,6 +1048,37 @@
                 <h4 style="color: var(--success);">✓ Metric 3</h4>
                 <p style="font-size: 36px; font-weight: 700; color: var(--text-primary);">100%</p>
                 <p>What this metric means</p>
+            </div>
+        </div>
+
+        <!-- Score Factors Panel (optional for detailed breakdowns) -->
+        <div class="score-factors-panel" style="margin-top: 40px;">
+            <h4>Scoring Breakdown</h4>
+            <div class="factor-grid">
+                <div class="factor-card">
+                    <div class="factor-header">
+                        <span class="factor-name">Factor 1</span>
+                        <span class="factor-pct">92%</span>
+                    </div>
+                    <div class="factor-bar"><div class="factor-fill" style="width: 92%;"></div></div>
+                    <div class="factor-desc">Description of what this measures</div>
+                </div>
+                <div class="factor-card">
+                    <div class="factor-header">
+                        <span class="factor-name">Factor 2</span>
+                        <span class="factor-pct">88%</span>
+                    </div>
+                    <div class="factor-bar"><div class="factor-fill" style="width: 88%;"></div></div>
+                    <div class="factor-desc">Description of what this measures</div>
+                </div>
+                <div class="factor-card">
+                    <div class="factor-header">
+                        <span class="factor-name">Factor 3</span>
+                        <span class="factor-pct">95%</span>
+                    </div>
+                    <div class="factor-bar"><div class="factor-fill" style="width: 95%;"></div></div>
+                    <div class="factor-desc">Description of what this measures</div>
+                </div>
             </div>
         </div>
     </div>
@@ -489,29 +1143,29 @@
     <div class="keyboard-hints">
         <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;
         <kbd>N</kbd> notes &nbsp;
-        <kbd>T</kbd> timer
+        <kbd>T</kbd> timer &nbsp;
+        <kbd>S</kbd> start/stop
     </div>
 
     <!-- ==================== SCRIPTS ==================== -->
     <script>
         // ============ CONFIGURATION ============
-        // Replace with your API base URL (if using live demo)
         const API_BASE = 'http://localhost:8000';
 
         // ============ STATE ============
         let currentSlide = 1;
         const totalSlides = 8;
         let timerInterval = null;
-        let timeRemaining = 300; // 5 minutes default
+        let timeRemaining = 300;
 
-        // Speaker notes for each slide
+        // Speaker notes
         const speakerNotes = {
             1: "HOOK: State your one-line value prop. What problem do you solve?",
-            2: "PROBLEM: Make them feel the pain. Why should they care?",
+            2: "PROBLEM: Make them feel the pain. Why should they care? Use the iceberg to show hidden costs.",
             3: "SCALE: Show the magnitude. Why is this worth solving?",
-            4: "SOLUTION: High-level architecture. How does it work?",
+            4: "SOLUTION: High-level architecture. Hover over stages for details.",
             5: "DEMO: Show, don't tell. This is the core of your presentation.",
-            6: "PROOF: Back it up with metrics. Why should they believe you?",
+            6: "PROOF: Back it up with metrics. Click on factors for details.",
             7: "ROADMAP: Be honest about gaps. It builds trust.",
             8: "ASK: Be specific. What do you need from them?"
         };
@@ -603,18 +1257,16 @@
         });
 
         // ============ DEMO FUNCTION ============
-        // Replace this with your actual demo logic
         async function runDemo() {
             const output = document.getElementById('demoOutput');
             output.style.display = 'block';
             output.innerHTML = '<p style="color: var(--text-muted);">Running demo...</p>';
 
             try {
-                // Example API call - replace with your endpoint
+                // Replace with your actual API call
                 // const response = await fetch(`${API_BASE}/your-endpoint`);
                 // const data = await response.json();
 
-                // Simulated response
                 setTimeout(() => {
                     output.innerHTML = `
                         <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid var(--border);">
