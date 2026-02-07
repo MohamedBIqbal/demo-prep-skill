@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Presentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue-dark: #003366;
+            --blue-mid: #0066cc;
+            --blue-light: #e6f0fa;
+            --accent: #00a3a3;
+            --warning: #cc6600;
+            --danger: #cc0000;
+            --success: #008844;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4d4d4d;
+            --text-muted: #808080;
+            --bg-white: #ffffff;
+            --bg-light: #f5f7fa;
+            --border: #d9e2ec;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+            background: var(--bg-white);
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            padding: 60px 80px 100px 80px;
+            flex-direction: column;
+            background: var(--bg-white);
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .context {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .action-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--blue-dark);
+            margin-bottom: 40px;
+            line-height: 1.3;
+            max-width: 80%;
+        }
+
+        .hero-stat {
+            font-size: 100px;
+            font-weight: 700;
+            color: var(--blue-mid);
+            line-height: 1;
+        }
+
+        .hero-stat-label {
+            font-size: 24px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin: 24px 0;
+        }
+
+        .card {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 4px solid var(--blue-mid);
+        }
+
+        .card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--blue-mid);
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--blue-mid), var(--accent));
+            transition: width 0.3s;
+            z-index: 100;
+        }
+
+        /* Timer */
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .timer.warning { color: var(--warning); background: #fff3e6; }
+        .timer.danger { color: var(--danger); background: #ffe6e6; }
+
+        /* Timer config */
+        .timer-config {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 101;
+            min-width: 200px;
+        }
+
+        .timer-config-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .timer-presets {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .timer-preset {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .timer-preset:hover { background: #f1f5f9; }
+        .timer-preset.active { background: var(--blue-mid); color: white; border-color: var(--blue-mid); }
+
+        .timer-custom {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer-custom input {
+            width: 60px;
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .timer-set-btn {
+            padding: 8px 16px;
+            background: var(--blue-mid);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .timer-set-btn:hover { background: var(--blue-dark); }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .nav button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .nav button:hover { background: var(--bg-light); }
+
+        .slide-counter {
+            font-size: 14px;
+            color: var(--text-muted);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* Speaker notes */
+        .speaker-notes {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            max-width: 600px;
+            font-size: 14px;
+            line-height: 1.6;
+            display: none;
+            z-index: 99;
+        }
+
+        .speaker-notes.visible { display: block; }
+
+        /* Keyboard hints */
+        .keyboard-hints {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        kbd {
+            background: var(--bg-light);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progress"></div>
+    <div class="timer" id="timer" style="display:none;">5:00</div>
+
+    <!-- Timer Config -->
+    <div class="timer-config" id="timerConfig" style="display:none;">
+        <div class="timer-config-header">
+            <span>Set Timer</span>
+            <button onclick="closeTimerConfig()" style="background:none;border:none;cursor:pointer;font-size:18px;">&times;</button>
+        </div>
+        <div class="timer-presets">
+            <button onclick="setTimer(3)" class="timer-preset">3 min</button>
+            <button onclick="setTimer(5)" class="timer-preset active">5 min</button>
+            <button onclick="setTimer(7)" class="timer-preset">7 min</button>
+        </div>
+        <div class="timer-custom">
+            <input type="number" id="customMinutes" min="1" max="30" value="5">
+            <span style="color:#64748b;">min</span>
+            <button onclick="setTimer(parseInt(document.getElementById('customMinutes').value))" class="timer-set-btn">Set</button>
+        </div>
+        <div style="margin-top:12px;font-size:11px;color:#94a3b8;">
+            <kbd>T</kbd> timer &nbsp; <kbd>S</kbd> start/stop &nbsp; <kbd>N</kbd> notes
+        </div>
+    </div>
+
+    <!-- ==================== SLIDES ==================== -->
+
+    <!-- SLIDE 1: Title -->
+    <div class="slide" id="slide-1">
+        <p class="context">YOUR CONTEXT LABEL</p>
+        <h1 class="action-title" style="font-size: 48px;">Your Product Name</h1>
+        <p style="font-size: 24px; color: var(--text-secondary); margin-bottom: 40px;">
+            One-sentence value proposition that answers "so what?"
+        </p>
+
+        <div class="card-grid" style="margin-top: auto;">
+            <div class="card">
+                <h4>Feature 1</h4>
+                <p>Brief description of key capability</p>
+            </div>
+            <div class="card">
+                <h4>Feature 2</h4>
+                <p>Brief description of key capability</p>
+            </div>
+            <div class="card">
+                <h4>Feature 3</h4>
+                <p>Brief description of key capability</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 2: The Problem -->
+    <div class="slide" id="slide-2">
+        <p class="context" style="color: var(--danger);">THE PROBLEM</p>
+        <h2 class="action-title">State the problem as an action title — what's broken?</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px;">
+            <div>
+                <h3 style="color: var(--text-secondary); margin-bottom: 20px;">Current State</h3>
+                <ul style="list-style: none; font-size: 18px; line-height: 2;">
+                    <li>❌ Pain point 1</li>
+                    <li>❌ Pain point 2</li>
+                    <li>❌ Pain point 3</li>
+                </ul>
+            </div>
+            <div style="background: #fee2e2; padding: 32px; border-radius: 12px; border-left: 4px solid var(--danger);">
+                <h3 style="color: var(--danger); margin-bottom: 16px;">⚠️ The Risk</h3>
+                <p style="font-size: 18px; color: var(--text-secondary);">
+                    What happens if this problem isn't solved? Make it concrete.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 3: Scale / Context -->
+    <div class="slide" id="slide-3">
+        <p class="context">THE SCALE</p>
+        <h2 class="action-title">Big number or stat that shows the magnitude</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 40px;">
+            <div style="background: var(--blue-mid); border-radius: 16px; padding: 40px; color: white; text-align: center;">
+                <div style="font-size: 64px; font-weight: 700;">100+</div>
+                <div style="font-size: 16px; opacity: 0.9;">metric label</div>
+            </div>
+            <div style="background: white; border: 2px solid var(--border); border-radius: 16px; padding: 40px; text-align: center;">
+                <div style="font-size: 64px; font-weight: 700; color: var(--success);">50K</div>
+                <div style="font-size: 16px; color: var(--text-muted);">metric label</div>
+            </div>
+            <div style="background: white; border: 2px solid var(--border); border-radius: 16px; padding: 40px; text-align: center;">
+                <div style="font-size: 64px; font-weight: 700; color: var(--accent);">99%</div>
+                <div style="font-size: 16px; color: var(--text-muted);">metric label</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 4: Solution / Architecture -->
+    <div class="slide" id="slide-4">
+        <p class="context">THE SOLUTION</p>
+        <h2 class="action-title">How your product solves the problem — architecture overview</h2>
+
+        <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin: 40px 0;">
+            <div style="padding: 20px 32px; background: var(--bg-light); border-radius: 8px; font-weight: 600;">Input</div>
+            <span style="font-size: 24px; color: var(--text-muted);">→</span>
+            <div style="padding: 20px 32px; background: var(--blue-mid); color: white; border-radius: 8px; font-weight: 600;">Your Product</div>
+            <span style="font-size: 24px; color: var(--text-muted);">→</span>
+            <div style="padding: 20px 32px; background: var(--success); color: white; border-radius: 8px; font-weight: 600;">Output</div>
+        </div>
+
+        <p style="text-align: center; color: var(--text-muted); font-size: 16px;">
+            Replace with your actual architecture diagram or flow
+        </p>
+    </div>
+
+    <!-- SLIDE 5: Live Demo -->
+    <div class="slide" id="slide-5">
+        <p class="context" style="color: var(--success);">LIVE DEMO</p>
+        <h2 class="action-title">Show, don't tell — demonstrate the core value</h2>
+
+        <div style="background: var(--bg-light); border-radius: 12px; padding: 60px; text-align: center; margin: 40px 0;">
+            <p style="font-size: 20px; color: var(--text-muted);">
+                🎬 Replace with your live demo component<br><br>
+                <em>API calls, interactive elements, or embedded iframe</em>
+            </p>
+
+            <!-- Example: API integration point -->
+            <button onclick="runDemo()" style="margin-top: 24px; padding: 16px 32px; background: var(--blue-mid); color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer;">
+                Run Demo →
+            </button>
+            <div id="demoOutput" style="margin-top: 24px; text-align: left; display: none;"></div>
+        </div>
+    </div>
+
+    <!-- SLIDE 6: Results / Proof -->
+    <div class="slide" id="slide-6">
+        <p class="context">THE PROOF</p>
+        <h2 class="action-title">Metrics and evidence that it works</h2>
+
+        <div class="card-grid">
+            <div class="card" style="border-left-color: var(--success);">
+                <h4 style="color: var(--success);">✓ Metric 1</h4>
+                <p style="font-size: 36px; font-weight: 700; color: var(--text-primary);">95%</p>
+                <p>What this metric means</p>
+            </div>
+            <div class="card" style="border-left-color: var(--success);">
+                <h4 style="color: var(--success);">✓ Metric 2</h4>
+                <p style="font-size: 36px; font-weight: 700; color: var(--text-primary);">2.5x</p>
+                <p>What this metric means</p>
+            </div>
+            <div class="card" style="border-left-color: var(--success);">
+                <h4 style="color: var(--success);">✓ Metric 3</h4>
+                <p style="font-size: 36px; font-weight: 700; color: var(--text-primary);">100%</p>
+                <p>What this metric means</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 7: Roadmap -->
+    <div class="slide" id="slide-7">
+        <p class="context">ROADMAP</p>
+        <h2 class="action-title">What's done, what's next — be honest about gaps</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px;">
+            <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 32px;">
+                <h3 style="color: var(--success); margin-bottom: 20px;">✓ Completed</h3>
+                <ul style="list-style: none; font-size: 16px; line-height: 2;">
+                    <li>✓ Milestone 1</li>
+                    <li>✓ Milestone 2</li>
+                    <li>✓ Milestone 3</li>
+                </ul>
+            </div>
+            <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 32px;">
+                <h3 style="color: var(--warning); margin-bottom: 20px;">⚠️ Honest Gaps</h3>
+                <ul style="list-style: none; font-size: 16px; line-height: 2;">
+                    <li>1. Known limitation</li>
+                    <li>2. Future work needed</li>
+                    <li>3. Open question</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 8: The Ask -->
+    <div class="slide" id="slide-8">
+        <p class="context">THE ASK</p>
+        <h2 class="action-title">What do you need from the audience? Be specific.</h2>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 40px 0;">
+            <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 24px;">
+                <h4 style="color: var(--blue-mid); margin-bottom: 12px;">💬 Feedback Request</h4>
+                <p style="color: var(--text-muted);">What specific feedback do you want?</p>
+            </div>
+            <div style="background: white; border: 1px solid var(--border); border-radius: 12px; padding: 24px;">
+                <h4 style="color: var(--warning); margin-bottom: 12px;">🎯 Priority Question</h4>
+                <p style="color: var(--text-muted);">What decision do you need help with?</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 60px;">
+            <h1 style="font-size: 48px; color: var(--blue-mid);">Thank You</h1>
+            <p style="font-size: 20px; color: var(--text-muted); margin-top: 16px;">Questions?</p>
+        </div>
+    </div>
+
+    <!-- ==================== NAVIGATION ==================== -->
+
+    <nav class="nav">
+        <button onclick="prevSlide()">←</button>
+        <span class="slide-counter"><span id="current">1</span> / <span id="total">8</span></span>
+        <button onclick="nextSlide()">→</button>
+    </nav>
+
+    <div class="speaker-notes" id="speakerNotes"></div>
+
+    <div class="keyboard-hints">
+        <kbd>←</kbd> <kbd>→</kbd> navigate &nbsp;
+        <kbd>N</kbd> notes &nbsp;
+        <kbd>T</kbd> timer
+    </div>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script>
+        // ============ CONFIGURATION ============
+        // Replace with your API base URL (if using live demo)
+        const API_BASE = 'http://localhost:8000';
+
+        // ============ STATE ============
+        let currentSlide = 1;
+        const totalSlides = 8;
+        let timerInterval = null;
+        let timeRemaining = 300; // 5 minutes default
+
+        // Speaker notes for each slide
+        const speakerNotes = {
+            1: "HOOK: State your one-line value prop. What problem do you solve?",
+            2: "PROBLEM: Make them feel the pain. Why should they care?",
+            3: "SCALE: Show the magnitude. Why is this worth solving?",
+            4: "SOLUTION: High-level architecture. How does it work?",
+            5: "DEMO: Show, don't tell. This is the core of your presentation.",
+            6: "PROOF: Back it up with metrics. Why should they believe you?",
+            7: "ROADMAP: Be honest about gaps. It builds trust.",
+            8: "ASK: Be specific. What do you need from them?"
+        };
+
+        // ============ SLIDE NAVIGATION ============
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            currentSlide = n;
+            if (currentSlide > totalSlides) currentSlide = 1;
+            if (currentSlide < 1) currentSlide = totalSlides;
+
+            slides.forEach(s => s.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+
+            document.getElementById('current').textContent = currentSlide;
+            document.getElementById('progress').style.width = `${(currentSlide / totalSlides) * 100}%`;
+            document.getElementById('speakerNotes').textContent = speakerNotes[currentSlide] || '';
+        }
+
+        function nextSlide() { showSlide(currentSlide + 1); }
+        function prevSlide() { showSlide(currentSlide - 1); }
+
+        // ============ TIMER ============
+        function startTimer() {
+            const timer = document.getElementById('timer');
+            timer.style.display = 'block';
+            closeTimerConfig();
+
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                const mins = Math.floor(timeRemaining / 60);
+                const secs = timeRemaining % 60;
+                timer.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+                timer.classList.remove('warning', 'danger');
+                if (timeRemaining <= 60) timer.classList.add('danger');
+                else if (timeRemaining <= 120) timer.classList.add('warning');
+
+                if (timeRemaining <= 0) clearInterval(timerInterval);
+            }, 1000);
+        }
+
+        function setTimer(minutes) {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            timeRemaining = minutes * 60;
+            const timer = document.getElementById('timer');
+            timer.textContent = `${minutes}:00`;
+            timer.style.display = 'block';
+            timer.classList.remove('warning', 'danger');
+
+            document.querySelectorAll('.timer-preset').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === `${minutes} min`) btn.classList.add('active');
+            });
+            document.getElementById('customMinutes').value = minutes;
+
+            closeTimerConfig();
+            startTimer();
+        }
+
+        function openTimerConfig() { document.getElementById('timerConfig').style.display = 'block'; }
+        function closeTimerConfig() { document.getElementById('timerConfig').style.display = 'none'; }
+        function toggleTimerConfig() {
+            const config = document.getElementById('timerConfig');
+            config.style.display = config.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // ============ KEYBOARD SHORTCUTS ============
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'n' || e.key === 'N') {
+                document.getElementById('speakerNotes').classList.toggle('visible');
+            }
+            if (e.key === 't' || e.key === 'T') toggleTimerConfig();
+            if (e.key === 's' || e.key === 'S') {
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                } else {
+                    startTimer();
+                }
+            }
+            if (e.key === 'Escape') closeTimerConfig();
+        });
+
+        // ============ DEMO FUNCTION ============
+        // Replace this with your actual demo logic
+        async function runDemo() {
+            const output = document.getElementById('demoOutput');
+            output.style.display = 'block';
+            output.innerHTML = '<p style="color: var(--text-muted);">Running demo...</p>';
+
+            try {
+                // Example API call - replace with your endpoint
+                // const response = await fetch(`${API_BASE}/your-endpoint`);
+                // const data = await response.json();
+
+                // Simulated response
+                setTimeout(() => {
+                    output.innerHTML = `
+                        <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid var(--border);">
+                            <p style="color: var(--success); font-weight: 600;">✓ Demo completed successfully</p>
+                            <p style="color: var(--text-muted); margin-top: 8px;">Replace this with your actual demo output</p>
+                        </div>
+                    `;
+                }, 1000);
+            } catch (error) {
+                output.innerHTML = `<p style="color: var(--danger);">Error: ${error.message}</p>`;
+            }
+        }
+
+        // ============ INIT ============
+        document.getElementById('total').textContent = totalSlides;
+        showSlide(1);
+
+        // Auto-start timer when leaving slide 1
+        document.addEventListener('keydown', (e) => {
+            if (currentSlide === 1 && (e.key === 'ArrowRight' || e.key === ' ') && !timerInterval) {
+                startTimer();
+            }
+        });
+    </script>
+</body>
+</html>
