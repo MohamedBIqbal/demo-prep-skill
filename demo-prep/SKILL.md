@@ -1,6 +1,6 @@
 ---
 name: preparing-demos
-description: Prepares product demos from technical walkthroughs to C-suite presentations — 5-minute format, pyramid structure, presenter scripts, checklists, Q&A frameworks, follow-up templates. Use when preparing a demo, creating presentation slides, writing a presenter script, or presenting to executives or investors.
+description: Demo preparation — technical walkthroughs to C-suite presentations. Pyramid structure, presenter scripts, checklists, Q&A frameworks, slide generation.
 user-invocable: false
 ---
 
