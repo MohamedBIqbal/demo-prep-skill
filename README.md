@@ -2,6 +2,13 @@
 
 A Claude Code skill for preparing product demos — from technical walkthroughs to C-suite presentations.
 
+## What's New in v2
+
+- **Proper SKILL.md format** — YAML frontmatter following Anthropic's skill conventions, in `demo-prep/SKILL.md`
+- **Progressive disclosure** — Condensed SKILL.md (119 lines) with 3 reference files for deep dives
+- **Reference files**: Apple-style UI design, glassmorphism slides, PowerPoint generation guide
+- **Condensed frameworks** — Same content, fewer tokens, better for Claude's context window
+
 ## Features
 
 - **Interactive HTML Presentation** — McKinsey-style slides with architecture pipelines, iceberg visualizations, and score factor panels
@@ -186,7 +193,13 @@ Edit `templates/demo.sh`:
 ```
 demo-prep-skill/
 ├── README.md                  # This file
-├── SKILL.md                   # Detailed frameworks and best practices
+├── SKILL.md                   # Standalone skill (detailed, all-in-one)
+├── demo-prep/                 # Proper skill directory (for .claude/skills/)
+│   ├── SKILL.md               # Condensed skill with YAML frontmatter
+│   └── references/
+│       ├── apple-style-ui.md  # Apple design tokens, typography, layout
+│       ├── glassmorphism.md   # Glass effects, animated backgrounds, CSS
+│       └── powerpoint-generation.md  # PPTX structure, python-pptx API
 ├── LICENSE                    # MIT License
 ├── requirements.txt           # Python dependencies
 ├── templates/
@@ -215,23 +228,28 @@ demo-prep-skill/
 
 ## Installation
 
-### Option 1: Clone directly
+### Option 1: Install as Claude Code skill (recommended)
+```bash
+# Copy the skill directory into your project
+cp -r demo-prep-skill/demo-prep/ /your-project/.claude/skills/demo-prep/
+
+# Copy templates and scripts
+cp -r demo-prep-skill/templates /your-project/demo/
+cp -r demo-prep-skill/scripts /your-project/demo/
+
+pip install -r demo-prep-skill/requirements.txt
+```
+
+### Option 2: Clone directly
 ```bash
 git clone https://github.com/MohamedBIqbal/demo-prep-skill.git
 cd demo-prep-skill
 pip install -r requirements.txt
 ```
 
-### Option 2: Add as submodule
+### Option 3: Copy standalone skill only
 ```bash
-cd /path/to/your/project
-git submodule add https://github.com/MohamedBIqbal/demo-prep-skill.git skills/demo-prep
-```
-
-### Option 3: Copy files
-```bash
-cp -r demo-prep-skill/templates /path/to/your/project/demo/
-cp -r demo-prep-skill/scripts /path/to/your/project/demo/
+cp demo-prep-skill/SKILL.md /your-project/
 ```
 
 ---
